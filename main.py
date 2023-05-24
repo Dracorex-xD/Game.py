@@ -1,54 +1,55 @@
-from availableTests.addition import *
-from availableTests.subtraction import *
-from availableTests.multiplication import *
-from availableTests.division import *
-
-import math
 import random
-
-availableTests = ['Addition', 'Subtraction', 'Multiplication', 'Division']
+from availableTests.addition import Addition
+from availableTests.subtraction import Subtraction
+from availableTests.multiplication import Multiplication
+from availableTests.division import Division
 result = 0
+wrong = []
+availableTests = {
+    'Addition': Addition,
+    'Subtraction': Subtraction,
+    'Multiplication': Multiplication,
+    'Division': Division
+}
 
 def ask():
-    print("Choose a Test Simulation:")
-    for test in availableTests:
+    print("Choose A Test Simulation:")
+    for test in availableTests.keys():
         print(test)
 
 def conclude():
-    print(f"You got {result}% correct")
+    print(f"You got {result}% correct!")
+    if wrong:
+        print("Incorrect answers:")
+        for wrong_answer in wrong:
+            print(wrong_answer)
 
 def menu():
-    global result
+    global result, wrong
     ask()
     choice = input("Your Choice: ")
-    
-    if choice == 'Addition':
-        for _ in range(10):
-            res, ans = Addition()
-            if res == ans:
-                result += 10
 
-    elif choice == 'Subtraction':
+    test_function = availableTests.get(choice)
+    if test_function:
         for _ in range(10):
-            res, ans = Subtraction()
+            res, ans = test_function()
+            result += 10
             if res == ans:
-                result += 10
+                print("Correct!")
+            else:
+                format = f"question { _ + 1} is wrong. Your answer was {res}. The correct answer was {ans}. Failure."
+                wrong.append(format)
+                result -= 10
+                
+    else:
+        print("Invalid choice.")
+        return
 
-    elif choice == 'Multiplication':
-        for _ in range(10):
-            res, ans = Multiplication()
-            if res == ans:
-                result += 10
-
-    elif choice == 'Division':
-        for _ in range(10):
-            res, ans = Division()
-            if res == ans:
-                result += 10
-    
     conclude()
 
 menu()
+
+
 
 
 
